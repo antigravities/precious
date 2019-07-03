@@ -1,0 +1,301 @@
+<!--
+precious, a hub for Steam Economy item rates
+Copyright (c) 2019 Cutie Cafe.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="/fontawesome"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.js"></script>
+
+        <style>
+            body {
+                background-color: #5542ff;
+                font-family: 'Lato';
+                color: white;
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 100%;
+            }
+
+            .waiting {
+                text-align: center;
+                opacity: 0.5;
+            }
+
+            #logo {
+                font-size: 4em;
+                text-align: center;
+            }
+
+            .item {
+                border: 1px solid rgba(255,255,255,0.3);
+                border-radius: 0.5em;
+                width: calc(25% - 2.35em); /* magic number */
+                display: inline-block;
+                height: 7em;
+                padding: 0.5em;
+                margin-left: 1em;
+                margin-bottom: 1em;
+                background-color: #5542ff;
+            }
+
+            a {
+                color: white;
+                text-decoration: none;
+            }
+
+            .col {
+                display: inline-block;
+            }
+
+            .col-3 {
+                position: relative;
+
+            }
+
+            #items {
+                width: 75%;
+                margin: auto;
+            }
+
+            .item-title {
+                font-size: 1.5em;
+                text-align: right;
+                padding-bottom: 1em;
+            }
+
+            .item-info {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            .item-prices {
+                font-size: 2em;
+                text-align: right;
+            }
+
+            p {
+                padding: 0;
+                margin: 0;
+                line-height: 100%;
+            }
+
+            @media only screen and (max-width: 1143px){
+                .item {
+                    width: calc(50% - 2.35em);
+                }
+            }
+
+            @media only screen and (max-width: 861px){
+                .item {
+                    width: calc(100% - 2.35em);
+                }
+
+                .container {
+                    margin: 0;
+                    position: static;
+                    top: 50%;
+                    left: 50%;
+                    transform: none;
+                    width: 100%;
+                }
+            }
+
+            .item-img {
+                height: 1em;
+                vertical-align:baseline;
+                padding-right: 0.1em;
+            }
+
+            #legal {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                background-color: #5542ff;
+                text-align: center;
+                z-index: -999;
+            }
+
+            .item-extra {
+                background-color: #4235cc;
+                position: relative;
+                width: 100%;
+                left: -0.5em;
+                bottom: -1.1em;
+                border-bottom-left-radius: 0.5em;
+                border-bottom-right-radius: 0.5em;
+                padding-left: 0.5em;
+                padding-right: 0.5em;
+                text-align: center;
+            }
+
+            .overlay {
+                position: relative;
+                top: calc(-7em + 2px);
+                left: -0.5em;
+                width: calc(100% + 1em);
+                height: calc(100% + 1em);
+                background-color: black;
+                opacity: 0.8;
+                border-radius: 0.5em;
+                z-index: -2;
+                display: none;
+            }
+
+            .overlay-visible {
+                display: block;
+                z-index: 5;
+                float: left;
+            }
+
+            .icon-sel {
+                width: 49%;
+                height: 100%;
+                display: inline-block;
+                font-size: 2em;
+                padding-top: calc(25% - 1.25em);
+                text-align: center;
+                text-decoration: none;
+            }
+
+            .icon-sel > a {
+                text-decoration: none;
+            }
+
+            .icon-sel-left {
+                float: left;
+            }
+
+            .icon-sel > input[type='text'] {
+                width: 80%;
+                text-align: center;
+                height: 20%;
+                font-family: 'Lato';
+            }
+
+            .normal {
+                font-size: 0.5em;
+            }
+
+            .icon-sel-right {
+                float: right;
+            }
+
+            .overlay-close {
+                position: relative;
+                top: calc(-5em + 2px);
+                text-align: center;
+                height: 1em;
+            }
+
+            .item-icon {
+                height: 1em;
+                position: relative;
+                top: -0.15em;
+                vertical-align: middle;
+            }
+
+            #graph {
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 50%;
+                height: 75%;
+                z-index: 10;
+                background-color: #4235cc;
+                border-radius: 0.5em;
+                padding: 1em;
+                display: none;
+            }
+
+            #graph.visible {
+                display: block;
+            }
+
+            #graph-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                opacity: 0.7;
+                z-index: 1;
+                display: none;
+            }
+
+            #graph > .instructions {
+                position: relative;
+                top: calc(-100% - 1em);
+                left: -.5em;
+                width: 100%;
+                text-align: center;
+            }
+
+            .close {
+                float: right;
+            }
+        </style>
+        <title>
+            ItemRates.app
+        </title>
+
+        <script src="/precious.js"></script>
+        <script>
+            window.addEventListener("load", () => {
+                window.Precious = new CPrecious([ "steam_gems", "tf2_tf2", "csgo_prisma", "csgo_full_average", "csgo_hydra" ]);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="graph-overlay">&nbsp;</div>
+
+        <div class="container">
+            <h1 id="logo">ItemRates.app<br><p style="font-size: 0.5em;">Beta</p></h1>
+
+            <div id="items">
+
+            </div>
+
+            <div id="graph">
+                <p class="instructions">
+                    Zoom or pan for more data.
+
+                    <a href="#" class="close fas fa-times"></a>
+                </p>
+            </div>
+        </div>
+
+        <p id="legal">
+            &copy; 2019 <a href="https://cutie.cafe/">Cutie Caf&eacute;</a>. Portions &copy; <a href="https://valvesoftware.com/">Valve Corporation</a> and others. Powered by <a href="https://store.steampowered.com/">Steam</a>.
+        </p>
+    </body>
+</html>

@@ -1,0 +1,18 @@
+{
+    "connectionString": "mysql://username:password@localhost/dbname",
+    "bitskins": {
+        "key": "",
+        "secret": ""
+    },
+    "backpack": "",
+    "fontawesome": "",
+    "track": {
+        "gems": {
+            "name": "Sack of Gems",
+            "econid": 26463978,
+            "image": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxH5rd9eDAjcFyv45SRYAFMIcKL_PArgVSL403ulRUWEndVKv6gpycBARydQdT7uKnfFVliqWbIzgbvY3hkNSJkfbwY-PVlDoEvsEpj-rC8MLlhlMkZsvIEA/360fx360f",
+            "scmurl": "753/753-Sack%20of%20Gems",
+            "bitskins": false
+        }
+    }
+}
