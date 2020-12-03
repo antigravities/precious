@@ -39,7 +39,7 @@ if( ! importOnly ){
                 trk[i] = config.track[i].name;
             });
 
-            res.end(JSON.stringify(trk), 200);
+            res.end(JSON.stringify(trk));
         });
     }
 
