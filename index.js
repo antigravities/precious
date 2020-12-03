@@ -1,21 +1,3 @@
-/*
-precious, a hub for Steam Economy item rates
-Copyright (c) 2019 Cutie Cafe.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 const fs = require("fs");
 
 const express = require("express");
@@ -28,35 +10,7 @@ const importOnly = process.argv.length > 4 && process.argv[2] == "import" && con
 
 const Op = sequelize.Op;
 
-const ItemEntry = async (db, sequelize, tname) => {
-    let table = db.define(tname, {
-        time: {
-            type: sequelize.DATE,
-            allowNull: false
-        },
-
-        bid: {
-            type: sequelize.DECIMAL(10,2),
-            allowNull: false
-        },
-        ask: {
-            type: sequelize.DECIMAL(10,2),
-            allowNull: false
-        },
-
-        bitskins: {
-            type: sequelize.DECIMAL(10,2)
-        },
-
-        backpack: {
-            type: sequelize.DECIMAL(10,2)
-        }
-    });
-
-    await table.sync();
-
-    return table;
-};
+const ItemEntry = require("./models/ItemEntry.js");
 
 const Models = {};
 const Jobs = {};
@@ -154,6 +108,7 @@ if( ! importOnly ){
                         await tx.save();
                     } catch(e){
                         console.log("Failed getting item " + item + " with econid " + config.track[item].econid + ": " + e);
+			console.log(e.stack);
                     }
                 } else {
                     let average = {};
@@ -338,16 +293,11 @@ if( ! importOnly ){
 
                 res.end(JSON.stringify(resp));
             });
-
-            app.get("/fontawesome", (req, res) => {
-                res.redirect("https://kit.fontawesome.com/" + config.fontawesome + ".js");
-                res.end();
-            });
         }
     }
 
     if( importOnly ){
-        let items = fs.readFileSync(process.argv[4]).toString().split("\n");
+        let items = fs.readFileSync(process.argv[4]).toString().split("\r\n");
 
         console.log("Beginning import of " + items.length + " items into table " + process.argv[3] + ".");
         console.log("This may take a long time depending on your database connection.");
@@ -357,12 +307,13 @@ if( ! importOnly ){
             process.stdout.write("\rInserting record " + (i+1) + "/" + items.length + " (" + Math.round(((i+1)/items.length)*100) + "%)");
 
             let item = items[i].split(",");
-
+	try {
             await (Models[process.argv[3]].build({
                 bid: item[0],
                 ask: item[1],
                 time: new Date(item[2] + " GMT")
             })).save();
+	} catch(e){ process.exit(console.log(item)); }
         }
 
         console.log("\nDone.");

@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/antigravities/precious#readme",
   "dependencies": {
-    "bitskins": "^1.0.0",
+    "bitskins": "github:Rob--/bitskins#master",
     "cron": "^1.7.1",
     "express": "^4.17.1",
     "mysql2": "^1.6.5",
