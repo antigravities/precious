@@ -11,6 +11,16 @@ $EDITOR config.json # see Sample configuration, below
 PORT=3000 node index.js
 ```
 
+## Docker
+Precious also runs inside of Docker.
+
+```
+docker pull antigravities/precious
+docker run -d -p 3000:3000 -v [path-to-config]/config.json:/precious/config.json antigravities/precious
+```
+
+**Caveat:** Make sure your MySQL instance is linked to your container, or [connect to localhost](https://stackoverflow.com/a/24326540).
+
 ## Sample configuration
 ```json
 {
@@ -20,7 +30,6 @@ PORT=3000 node index.js
         "secret": "BitSkins authentication secret, see their Web site for details"
     },
     "backpack": "Backpack.tf API key, see their Web site for details",
-    "fontawesome": "Font Awesome kit key",
     "track": {
         "Item ID": {
             "name": "Item name. Shows up on site.",
