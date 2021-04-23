@@ -1,4 +1,4 @@
-FROM node:15-alpine3.11
+FROM node:current-alpine
 
 RUN mkdir /precious
 
