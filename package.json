@@ -1,6 +1,6 @@
 {
   "name": "precious",
-  "version": "1.0.0",
+  "version": "1.2.1",
   "description": "Track Steam Community Inventory item rates.",
   "main": "index.js",
   "scripts": {
@@ -20,9 +20,9 @@
     "bitskins": "github:Rob--/bitskins#master",
     "cron": "^1.7.1",
     "express": "^4.17.1",
-    "mysql2": "^1.6.5",
+    "mysql2": "^2.2.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "sequelize": "^5.8.7"
+    "sequelize": "^6.6.2"
   }
 }
