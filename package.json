@@ -23,6 +23,6 @@
     "mysql2": "^2.2.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "sequelize": "^6.6.2"
+    "sequelize": "^6.28.2"
   }
 }
